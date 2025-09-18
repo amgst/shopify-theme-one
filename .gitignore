@@ -12,9 +12,6 @@ Thumbs.db
 
 # Shopify
 .shopify
-.theme-check.yml
-config/settings_data.json
-config/settings_schema.json
 *.zip
 dist/
 .env
