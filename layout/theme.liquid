@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>
+      {{ page_title }}
+      -
+      {{ shop.name }}
+    </title>
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom theme styles -->
+    {% comment %} {{ 'base.css' | asset_url | stylesheet_tag }} {% endcomment %}
+
+    <!-- Shopify header content -->
+    {{ content_for_header }}
+
+    <!-- Favicon -->
+    {% if settings.favicon %}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {% endif %}
+  </head>
+
+  <body style="min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- Skip to content link for accessibility -->
+    <a href="#MainContent" style="position: absolute; left: -9999px;" onfocus="this.style.left = '0'; this.style.top = '0'; this.style.zIndex = '9999';" onblur="this.style.left = '-9999px';">Skip to content</a>
+
+    <!-- Header section -->
+    {% section 'header' %}
+
+    <!-- Main content -->
+    <main id="MainContent" style="flex: 1;" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    <!-- Footer section -->
+    {% section 'footer' %}
+
+    <!-- Shopify scripts -->
+    {{ content_for_footer }}
+  </body>
+</html>
