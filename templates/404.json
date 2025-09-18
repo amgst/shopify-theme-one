@@ -11,10 +11,30 @@
   "sections": {
     "main": {
       "type": "main-404",
+      "disabled": true,
       "settings": {}
+    },
+    "wb_hero_banner_4tjhgd": {
+      "type": "wb-hero-banner",
+      "name": "WB Hero Banner",
+      "settings": {
+        "image": "shopify://shop_images/bg_3.jpg",
+        "overlay_opacity": 30,
+        "heading": "Welcome to Our Store",
+        "subheading": "Discover amazing products and exceptional quality",
+        "text_color": "text-white",
+        "button_label": "Shop Now",
+        "button_link": "",
+        "button_style": "blue_primary",
+        "button_label_2": "",
+        "button_link_2": "",
+        "button_style_2": "white_outline",
+        "show_scroll_indicator": true
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "wb_hero_banner_4tjhgd"
   ]
 }
