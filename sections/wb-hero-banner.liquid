@@ -1,0 +1,243 @@
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  {%- if section.settings.image != blank -%}
+    <div class="absolute inset-0 z-0">
+      <img
+        src="{{ section.settings.image | image_url: width: 1920 }}"
+        srcset="{{ section.settings.image | image_url: width: 375 }} 375w,
+                {{ section.settings.image | image_url: width: 750 }} 750w,
+                {{ section.settings.image | image_url: width: 1100 }} 1100w,
+                {{ section.settings.image | image_url: width: 1500 }} 1500w,
+                {{ section.settings.image | image_url: width: 1920 }} 1920w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        class="w-full h-full object-cover"
+        loading="eager"
+      >
+      {%- if section.settings.overlay_opacity > 0 -%}
+        <div class="absolute inset-0 bg-black" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="absolute inset-0 z-0 bg-gradient-to-br from-gray-100 to-gray-200"></div>
+  {%- endif -%}
+
+  <div class="relative z-10 container mx-auto px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 {{ section.settings.text_color }}">
+          {{ section.settings.heading }}
+        </h1>
+      {%- endif -%}
+      
+      {%- if section.settings.subheading != blank -%}
+        <p class="text-lg md:text-xl lg:text-2xl mb-8 {{ section.settings.text_color }} opacity-90">
+          {{ section.settings.subheading }}
+        </p>
+      {%- endif -%}
+      
+      {%- if section.settings.button_label != blank -%}
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          {% assign btn_class = '' %}
+          {% case section.settings.button_style %}
+            {% when 'blue_primary' %}
+              {% assign btn_class = 'bg-blue-600 text-white hover:bg-blue-700' %}
+            {% when 'white_primary' %}
+              {% assign btn_class = 'bg-white text-black hover:bg-gray-100' %}
+            {% when 'black_primary' %}
+              {% assign btn_class = 'bg-black text-white hover:bg-gray-800' %}
+            {% when 'white_outline' %}
+              {% assign btn_class = 'border-2 border-white text-white' %}
+          {% endcase %}
+          
+          <a
+            {% if section.settings.button_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105 {{ btn_class }}"
+          >
+            {{ section.settings.button_label | escape }}
+          </a>
+          
+          {%- if section.settings.button_label_2 != blank -%}
+            {% assign btn2_class = '' %}
+            {% case section.settings.button_style_2 %}
+              {% when 'white_outline' %}
+                {% assign btn2_class = 'border-2 border-white text-white' %}
+              {% when 'black_outline' %}
+                {% assign btn2_class = 'border-2 border-black text-black' %}
+              {% when 'gray_primary' %}
+                {% assign btn2_class = 'bg-gray-600 text-white hover:bg-gray-700' %}
+            {% endcase %}
+            
+            <a
+              {% if section.settings.button_link_2 == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ section.settings.button_link_2 }}"
+              {% endif %}
+              class="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105 {{ btn2_class }}"
+            >
+              {{ section.settings.button_label_2 | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+      <div class="animate-bounce">
+        <svg class="w-6 h-6 {{ section.settings.text_color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  .wb-hero-banner .border-white:hover {
+    background-color: white !important;
+    color: black !important;
+  }
+  .wb-hero-banner .border-black:hover {
+    background-color: black !important;
+    color: white !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "WB Hero Banner",
+  "tag": "section",
+  "class": "wb-hero-banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover amazing products and exceptional quality"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        {
+          "value": "text-white",
+          "label": "White"
+        },
+        {
+          "value": "text-black",
+          "label": "Black"
+        },
+        {
+          "value": "text-gray-800",
+          "label": "Dark Gray"
+        }
+      ],
+      "default": "text-white"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Primary Button Style",
+      "options": [
+        {
+          "value": "blue_primary",
+          "label": "Blue Primary"
+        },
+        {
+          "value": "white_primary",
+          "label": "White Primary"
+        },
+        {
+          "value": "black_primary",
+          "label": "Black Primary"
+        },
+        {
+          "value": "white_outline",
+          "label": "White Outline"
+        }
+      ],
+      "default": "blue_primary"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Secondary Button Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style_2",
+      "label": "Secondary Button Style",
+      "options": [
+        {
+          "value": "white_outline",
+          "label": "White Outline"
+        },
+        {
+          "value": "black_outline",
+          "label": "Black Outline"
+        },
+        {
+          "value": "gray_primary",
+          "label": "Gray Primary"
+        }
+      ],
+      "default": "white_outline"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show Scroll Indicator",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "WB Hero Banner"
+    }
+  ]
+}
+{% endschema %}

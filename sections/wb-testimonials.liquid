@@ -1,0 +1,365 @@
+<section class="py-16 lg:py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    {%- if section.settings.title != blank -%}
+      <div class="text-center mb-12 lg:mb-16">
+        <h2 class="text-3xl lg:text-4xl xl:text-5xl font-light tracking-tight mb-4">
+          {{ section.settings.title }}
+        </h2>
+        {%- if section.settings.description != blank -%}
+          <div class="text-lg text-gray-600 max-w-3xl mx-auto">
+            {{ section.settings.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.enable_slider -%}
+      <div class="relative overflow-hidden" id="testimonials-slider-{{ section.id }}">
+        <div class="flex transition-transform duration-500 ease-in-out" id="slider-track-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+              <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col" {{ block.shopify_attributes }}>
+                {%- if section.settings.show_stars -%}
+                  <div class="flex gap-1 mb-4">
+                    {%- for i in (1..5) -%}
+                      <svg class="w-4 h-4 {% if i <= block.settings.rating %}text-yellow-400{% else %}text-gray-300{% endif %}" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                      </svg>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+                
+                {%- if block.settings.quote != blank -%}
+                  <blockquote class="text-lg leading-relaxed text-gray-700 italic mb-6 flex-grow">
+                    "{{ block.settings.quote }}"
+                  </blockquote>
+                {%- endif -%}
+                
+                <div class="flex items-center gap-4 mt-auto">
+                  {%- if block.settings.image != blank -%}
+                    <div class="flex-shrink-0">
+                      <img
+                        src="{{ block.settings.image | image_url: width: 60 }}"
+                        alt="{{ block.settings.image.alt | escape }}"
+                        loading="lazy"
+                        width="60"
+                        height="60"
+                        class="w-15 h-15 rounded-full object-cover"
+                      >
+                    </div>
+                  {%- endif -%}
+                  
+                  <div class="min-w-0">
+                    {%- if block.settings.author != blank -%}
+                      <cite class="block text-base font-semibold text-gray-900 not-italic mb-1">
+                        {{ block.settings.author }}
+                      </cite>
+                    {%- endif -%}
+                    {%- if block.settings.position != blank -%}
+                      <p class="text-sm text-gray-600">
+                        {{ block.settings.position }}
+                      </p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        
+        {%- if section.settings.show_navigation and section.blocks.size > 3 -%}
+          <button 
+            class="absolute left-4 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-10"
+            onclick="slideTestimonials('{{ section.id }}', 'prev')"
+            id="prev-btn-{{ section.id }}"
+          >
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          
+          <button 
+            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-10"
+            onclick="slideTestimonials('{{ section.id }}', 'next')"
+            id="next-btn-{{ section.id }}"
+          >
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        {%- endif -%}
+        
+        {%- if section.settings.show_pagination and section.blocks.size > 1 -%}
+          <div class="flex justify-center gap-2 mt-8" id="pagination-{{ section.id }}">
+            {%- for block in section.blocks -%}
+              <button 
+                class="w-3 h-3 rounded-full transition-all duration-300 {% if forloop.first %}bg-gray-900 scale-110{% else %}bg-gray-300 hover:bg-gray-500{% endif %}"
+                onclick="goToSlide('{{ section.id }}', {{ forloop.index0 }})"
+                data-slide="{{ forloop.index0 }}"
+              ></button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {%- for block in section.blocks -%}
+          <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col" {{ block.shopify_attributes }}>
+            {%- if section.settings.show_stars -%}
+              <div class="flex gap-1 mb-4">
+                {%- for i in (1..5) -%}
+                  <svg class="w-4 h-4 {% if i <= block.settings.rating %}text-yellow-400{% else %}text-gray-300{% endif %}" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+            
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="text-lg leading-relaxed text-gray-700 italic mb-6 flex-grow">
+                "{{ block.settings.quote }}"
+              </blockquote>
+            {%- endif -%}
+            
+            <div class="flex items-center gap-4 mt-auto">
+              {%- if block.settings.image != blank -%}
+                <div class="flex-shrink-0">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 60 }}"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    loading="lazy"
+                    width="60"
+                    height="60"
+                    class="w-15 h-15 rounded-full object-cover"
+                  >
+                </div>
+              {%- endif -%}
+              
+              <div class="min-w-0">
+                {%- if block.settings.author != blank -%}
+                  <cite class="block text-base font-semibold text-gray-900 not-italic mb-1">
+                    {{ block.settings.author }}
+                  </cite>
+                {%- endif -%}
+                {%- if block.settings.position != blank -%}
+                  <p class="text-sm text-gray-600">
+                    {{ block.settings.position }}
+                  </p>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  let currentSlide = {};
+  let autoplayIntervals = {};
+
+  function initTestimonialSlider(sectionId) {
+    currentSlide[sectionId] = 0;
+    const totalSlides = document.querySelectorAll(`#testimonials-slider-${sectionId} .flex-shrink-0`).length;
+    
+    if (totalSlides > 3) {
+      startAutoplay(sectionId);
+    }
+    
+    updateSlider(sectionId);
+  }
+
+  function slideTestimonials(sectionId, direction) {
+    const track = document.getElementById(`slider-track-${sectionId}`);
+    const slides = track.children;
+    const totalSlides = slides.length;
+    const slidesToShow = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+    const maxSlide = Math.max(0, totalSlides - slidesToShow);
+    
+    if (direction === 'next') {
+      currentSlide[sectionId] = currentSlide[sectionId] >= maxSlide ? 0 : currentSlide[sectionId] + 1;
+    } else {
+      currentSlide[sectionId] = currentSlide[sectionId] <= 0 ? maxSlide : currentSlide[sectionId] - 1;
+    }
+    
+    updateSlider(sectionId);
+    resetAutoplay(sectionId);
+  }
+
+  function goToSlide(sectionId, slideIndex) {
+    currentSlide[sectionId] = slideIndex;
+    updateSlider(sectionId);
+    resetAutoplay(sectionId);
+  }
+
+  function updateSlider(sectionId) {
+    const track = document.getElementById(`slider-track-${sectionId}`);
+    const slidesToShow = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+    const slideWidth = 100 / slidesToShow;
+    const translateX = -currentSlide[sectionId] * slideWidth;
+    
+    track.style.transform = `translateX(${translateX}%)`;
+    
+    // Update pagination
+    const paginationButtons = document.querySelectorAll(`#pagination-${sectionId} button`);
+    paginationButtons.forEach((btn, index) => {
+      if (index === currentSlide[sectionId]) {
+        btn.className = 'w-3 h-3 rounded-full transition-all duration-300 bg-gray-900 scale-110';
+      } else {
+        btn.className = 'w-3 h-3 rounded-full transition-all duration-300 bg-gray-300 hover:bg-gray-500';
+      }
+    });
+  }
+
+  function startAutoplay(sectionId) {
+    autoplayIntervals[sectionId] = setInterval(() => {
+      slideTestimonials(sectionId, 'next');
+    }, 6000);
+  }
+
+  function resetAutoplay(sectionId) {
+    if (autoplayIntervals[sectionId]) {
+      clearInterval(autoplayIntervals[sectionId]);
+      startAutoplay(sectionId);
+    }
+  }
+
+  // Initialize sliders when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const sliders = document.querySelectorAll('[id^="testimonials-slider-"]');
+    sliders.forEach(slider => {
+      const sectionId = slider.id.replace('testimonials-slider-', '');
+      initTestimonialSlider(sectionId);
+    });
+  });
+
+  // Handle window resize
+  window.addEventListener('resize', function() {
+    const sliders = document.querySelectorAll('[id^="testimonials-slider-"]');
+    sliders.forEach(slider => {
+      const sectionId = slider.id.replace('testimonials-slider-', '');
+      updateSlider(sectionId);
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "WB Testimonials",
+  "tag": "section",
+  "class": "wb-testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Don't just take our word for it - hear from our satisfied customers</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "Enable slider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show star ratings",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "This product exceeded my expectations. The quality is outstanding and the customer service was exceptional."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author Name",
+          "default": "Sarah Johnson"
+        },
+        {
+          "type": "text",
+          "id": "position",
+          "label": "Author Position/Title",
+          "default": "Verified Customer"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Author Photo"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Star Rating",
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WB Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Absolutely love this store! The quality of products is amazing and shipping was super fast. Will definitely be ordering again.",
+            "author": "Emily Chen",
+            "position": "Verified Customer",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Outstanding customer service and beautiful products. The attention to detail is incredible. Highly recommend!",
+            "author": "Michael Rodriguez",
+            "position": "Verified Customer",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Best shopping experience I've had online. The products are exactly as described and the packaging was perfect.",
+            "author": "Jessica Thompson",
+            "position": "Verified Customer",
+            "rating": 5
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

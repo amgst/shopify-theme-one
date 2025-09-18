@@ -1,0 +1,368 @@
+<!-- Brand Story Section -->
+<section class="py-16 lg:py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Content Side -->
+      <div class="{% if section.settings.layout == 'image_first' %}lg:order-2{% endif %}">
+        {% if section.settings.heading != blank %}
+          <h2 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <h3 class="text-xl lg:text-2xl text-gray-600 mb-6 font-medium">
+            {{ section.settings.subheading }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="prose prose-lg text-gray-700 mb-8 max-w-none">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+
+        <!-- Features List -->
+        {% if section.blocks.size > 0 %}
+          <div class="space-y-4 mb-8">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'feature' %}
+                  <div class="flex items-start space-x-3" {{ block.shopify_attributes }}>
+                    <div class="flex-shrink-0 mt-1">
+                      <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      {% if block.settings.title != blank %}
+                        <h4 class="font-semibold text-gray-900 mb-1">
+                          {{ block.settings.title }}
+                        </h4>
+                      {% endif %}
+                      {% if block.settings.description != blank %}
+                        <p class="text-gray-600">
+                          {{ block.settings.description }}
+                        </p>
+                      {% endif %}
+                    </div>
+                  </div>
+              {% endcase %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Call to Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <a 
+              href="{{ section.settings.button_link }}" 
+              class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 transition-colors duration-200"
+            >
+              {{ section.settings.button_label }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.secondary_button_label != blank and section.settings.secondary_button_link != blank %}
+            <a 
+              href="{{ section.settings.secondary_button_link }}" 
+              class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200"
+            >
+              {{ section.settings.secondary_button_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Image Side -->
+      <div class="{% if section.settings.layout == 'image_first' %}lg:order-1{% endif %}">
+        {% if section.settings.image != blank %}
+          <div class="relative overflow-hidden rounded-lg shadow-xl">
+            <img 
+              src="{{ section.settings.image | image_url: width: 800 }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            >
+            {% if section.settings.show_overlay %}
+              <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+            {% endif %}
+          </div>
+        {% else %}
+          <!-- Placeholder when no image is set -->
+          <div class="relative overflow-hidden rounded-lg shadow-xl bg-gray-200 aspect-[4/3] flex items-center justify-center">
+            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+        {% endif %}
+
+        <!-- Optional Video -->
+        {% if section.settings.video_url != blank %}
+          <div class="mt-6">
+            <div class="relative overflow-hidden rounded-lg shadow-lg">
+              {% if section.settings.video_url contains 'youtube.com' or section.settings.video_url contains 'youtu.be' %}
+                {% assign video_id = section.settings.video_url | split: '/' | last | split: '?' | first | split: '&' | first %}
+                {% if section.settings.video_url contains 'youtu.be' %}
+                  {% assign video_id = section.settings.video_url | split: '/' | last | split: '?' | first %}
+                {% elsif section.settings.video_url contains 'watch?v=' %}
+                  {% assign video_id = section.settings.video_url | split: 'watch?v=' | last | split: '&' | first %}
+                {% endif %}
+                <iframe 
+                  src="https://www.youtube.com/embed/{{ video_id }}"
+                  class="w-full aspect-video"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {% elsif section.settings.video_url contains 'vimeo.com' %}
+                {% assign video_id = section.settings.video_url | split: '/' | last %}
+                <iframe 
+                  src="https://player.vimeo.com/video/{{ video_id }}"
+                  class="w-full aspect-video"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Statistics Section -->
+    {% if section.settings.show_stats %}
+      <div class="mt-16 lg:mt-20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {% if section.settings.stat_1_number != blank %}
+            <div class="text-center">
+              <div class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                {{ section.settings.stat_1_number }}
+              </div>
+              {% if section.settings.stat_1_label != blank %}
+                <div class="text-sm lg:text-base text-gray-600 font-medium">
+                  {{ section.settings.stat_1_label }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if section.settings.stat_2_number != blank %}
+            <div class="text-center">
+              <div class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                {{ section.settings.stat_2_number }}
+              </div>
+              {% if section.settings.stat_2_label != blank %}
+                <div class="text-sm lg:text-base text-gray-600 font-medium">
+                  {{ section.settings.stat_2_label }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if section.settings.stat_3_number != blank %}
+            <div class="text-center">
+              <div class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                {{ section.settings.stat_3_number }}
+              </div>
+              {% if section.settings.stat_3_label != blank %}
+                <div class="text-sm lg:text-base text-gray-600 font-medium">
+                  {{ section.settings.stat_3_label }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if section.settings.stat_4_number != blank %}
+            <div class="text-center">
+              <div class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                {{ section.settings.stat_4_number }}
+              </div>
+              {% if section.settings.stat_4_label != blank %}
+                <div class="text-sm lg:text-base text-gray-600 font-medium">
+                  {{ section.settings.stat_4_label }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Tell your brand's story and connect with your customers on a deeper level.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show image overlay",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "Image first"
+        },
+        {
+          "value": "text_first",
+          "label": "Text first"
+        }
+      ],
+      "default": "text_first"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (YouTube or Vimeo)"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Statistics"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show statistics",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "stat_1_number",
+      "label": "Statistic 1 - Number"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Statistic 1 - Label"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_number",
+      "label": "Statistic 2 - Number"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Statistic 2 - Label"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_number",
+      "label": "Statistic 3 - Number"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Statistic 3 - Label"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_number",
+      "label": "Statistic 4 - Number"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_label",
+      "label": "Statistic 4 - Label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Feature description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Quality Materials",
+            "description": "We use only the finest materials in our products"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Expert Craftsmanship",
+            "description": "Every item is carefully crafted by skilled artisans"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Sustainable Practices",
+            "description": "Committed to environmental responsibility"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
