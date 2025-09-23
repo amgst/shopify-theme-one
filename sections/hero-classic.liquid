@@ -1,0 +1,418 @@
+{% comment %}
+  Classic Centered Hero Section
+{% endcomment %}
+
+<section
+  class="hero-classic"
+  style="background: linear-gradient(135deg, {{ section.settings.bg_color_start }} 0%, {{ section.settings.bg_color_end }} 100%); min-height: {{ section.settings.section_height }}vh;"
+>
+  <div class="hero-classic__container">
+    <div class="hero-classic__content">
+      <div class="hero-classic__text-wrapper">
+        {% if section.settings.heading != blank %}
+          <h1 class="hero-classic__heading">
+            {{ section.settings.heading | escape }}
+            {% if section.settings.heading_accent != blank %}
+              <span class="hero-classic__heading-accent" style="color: {{ section.settings.accent_color }};">
+                {{ section.settings.heading_accent | escape }}
+              </span>
+            {% endif %}
+          </h1>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <p class="hero-classic__description">
+            {{ section.settings.description | escape }}
+          </p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.button_primary_text != blank or section.settings.button_secondary_text != blank %}
+        <div class="hero-classic__buttons">
+          {% if section.settings.button_primary_text != blank %}
+            <a
+              href="{{ section.settings.button_primary_link | default: '#' }}"
+              class="hero-classic__button hero-classic__button--primary"
+              style="background-color: {{ section.settings.primary_button_bg }}; color: {{ section.settings.primary_button_text }};"
+            >
+              {{ section.settings.button_primary_text | escape }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.button_secondary_text != blank %}
+            <a
+              href="{{ section.settings.button_secondary_link | default: '#' }}"
+              class="hero-classic__button hero-classic__button--secondary"
+              style="border-color: {{ section.settings.secondary_button_border }}; color: {{ section.settings.secondary_button_text }};"
+            >
+              {{ section.settings.button_secondary_text | escape }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div class="hero-classic__features">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'feature' %}
+                <div class="hero-classic__feature" {{ block.shopify_attributes }}>
+                  <div
+                    class="hero-classic__feature-dot"
+                    style="background-color: {{ block.settings.dot_color }};"
+                  ></div>
+                  <span>{{ block.settings.text | escape }}</span>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="hero-classic__background-elements">
+      <div
+        class="hero-classic__bg-circle hero-classic__bg-circle--1"
+        style="background-color: {{ section.settings.accent_color }}20;"
+      ></div>
+      <div
+        class="hero-classic__bg-circle hero-classic__bg-circle--2"
+        style="background-color: {{ section.settings.secondary_accent_color }}20;"
+      ></div>
+      <div
+        class="hero-classic__bg-circle hero-classic__bg-circle--3"
+        style="background-color: {{ section.settings.tertiary_accent_color }}20;"
+      ></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-classic {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    overflow: hidden;
+  }
+
+  .hero-classic__container {
+    position: relative;
+    max-width: 64rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-classic__content {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-classic__text-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .hero-classic__heading {
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-classic__heading-accent {
+    display: block;
+  }
+
+  .hero-classic__description {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+
+  .hero-classic__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero-classic__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 2rem;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 200px;
+  }
+
+  .hero-classic__button--primary {
+    border: none;
+  }
+
+  .hero-classic__button--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .hero-classic__button--secondary {
+    background: transparent;
+    border: 2px solid;
+  }
+
+  .hero-classic__button--secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hero-classic__features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    justify-content: center;
+  }
+
+  .hero-classic__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+
+  .hero-classic__feature-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+  }
+
+  .hero-classic__background-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-classic__bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+  }
+
+  .hero-classic__bg-circle--1 {
+    top: 5rem;
+    left: 2.5rem;
+    width: 8rem;
+    height: 8rem;
+  }
+
+  .hero-classic__bg-circle--2 {
+    bottom: 5rem;
+    right: 2.5rem;
+    width: 12rem;
+    height: 12rem;
+  }
+
+  .hero-classic__bg-circle--3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24rem;
+    height: 24rem;
+    filter: blur(80px);
+  }
+
+  @media (min-width: 640px) {
+    .hero-classic__buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .hero-classic__features {
+      flex-direction: row;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Classic",
+  "tag": "section",
+  "class": "section-hero-classic",
+  "settings": [
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 50,
+      "max": 120,
+      "step": 10,
+      "unit": "vh",
+      "label": "Section height",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Your"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent text",
+      "default": "Perfect Style"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Curated collections that define modern elegance. Shop our latest arrivals and transform your wardrobe with timeless pieces."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_primary_text",
+      "label": "Primary button text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_secondary_text",
+      "label": "Secondary button text",
+      "default": "View Lookbook"
+    },
+    {
+      "type": "url",
+      "id": "button_secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_start",
+      "label": "Background gradient start",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_end",
+      "label": "Background gradient end",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_accent_color",
+      "label": "Secondary accent color",
+      "default": "#3b82f6"
+    },
+    {
+      "type": "color",
+      "id": "tertiary_accent_color",
+      "label": "Tertiary accent color",
+      "default": "#a855f7"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_bg",
+      "label": "Primary button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border",
+      "label": "Secondary button border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Feature text",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "color",
+          "id": "dot_color",
+          "label": "Dot color",
+          "default": "#22c55e"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Classic",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Free Shipping",
+            "dot_color": "#22c55e"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "30-Day Returns",
+            "dot_color": "#3b82f6"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Premium Quality",
+            "dot_color": "#a855f7"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

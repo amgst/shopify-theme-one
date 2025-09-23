@@ -1,0 +1,1616 @@
+{% comment %}
+Luxury Newsletter Section
+{% endcomment %}
+
+<section class="luxury-newsletter" 
+         style="padding: {{ section.settings.section_padding_y }}px {{ section.settings.section_padding_x }}px;
+                background: {{ section.settings.bg_type == 'gradient' ? 'linear-gradient(' | append: section.settings.gradient_direction | append: ', ' | append: section.settings.bg_color_start | append: ' 0%, ' | append: section.settings.bg_color_end | append: ' 100%)' : section.settings.bg_color_solid }};
+                position: relative;
+                overflow: hidden;">
+  
+  {% if section.settings.bg_type == 'image' and section.settings.background_image != blank %}
+    <div class="luxury-newsletter__background">
+      {{ section.settings.background_image | image_url: width: 1920 | image_tag: 
+         loading: 'lazy',
+         class: 'luxury-newsletter__bg-image',
+         alt: section.settings.background_image.alt | default: section.settings.heading }}
+      <div class="luxury-newsletter__overlay" 
+           style="background: {{ section.settings.overlay_type == 'solid' ? section.settings.overlay_color : 'linear-gradient(' | append: section.settings.overlay_direction | append: ', ' | append: section.settings.overlay_color_start | append: ' 0%, ' | append: section.settings.overlay_color_end | append: ' 100%)' }};
+                  opacity: {{ section.settings.overlay_opacity }};"></div>
+    </div>
+  {% endif %}
+  
+  <div class="luxury-newsletter__container" 
+       style="max-width: {{ section.settings.container_max_width }}px;
+              position: relative;
+              z-index: 10;">
+    
+    <div class="luxury-newsletter__content" 
+         style="text-align: {{ section.settings.content_alignment }};
+                background: {{ section.settings.content_bg_type == 'solid' ? section.settings.content_bg_color : 'linear-gradient(' | append: section.settings.content_bg_direction | append: ', ' | append: section.settings.content_bg_start | append: ' 0%, ' | append: section.settings.content_bg_end | append: ' 100%)' }};
+                border: {{ section.settings.content_border_width }}px solid {{ section.settings.content_border_color }};
+                border-radius: {{ section.settings.content_border_radius }}px;
+                padding: {{ section.settings.content_padding }}px;
+                box-shadow: {{ section.settings.content_shadow }};
+                backdrop-filter: {{ section.settings.content_blur ? 'blur(12px)' : 'none' }};">
+      
+      {% if section.settings.show_icon and section.settings.icon_type != 'none' %}
+        <div class="luxury-newsletter__icon" 
+             style="margin-bottom: {{ section.settings.icon_margin }}px;
+                    display: flex;
+                    justify-content: {{ section.settings.content_alignment == 'center' ? 'center' : section.settings.content_alignment == 'right' ? 'flex-end' : 'flex-start' }};">
+          {% if section.settings.icon_type == 'svg' and section.settings.svg_code != blank %}
+            <div style="width: {{ section.settings.icon_size }}px; height: {{ section.settings.icon_size }}px; color: {{ section.settings.icon_color }};">
+              {{ section.settings.svg_code }}
+            </div>
+          {% elsif section.settings.icon_type == 'image' and section.settings.icon_image != blank %}
+            {{ section.settings.icon_image | image_url: width: section.settings.icon_size | image_tag: 
+               loading: 'lazy',
+               alt: section.settings.icon_image.alt,
+               style: 'width: ' | append: section.settings.icon_size | append: 'px; height: ' | append: section.settings.icon_size | append: 'px; object-fit: cover; border-radius: ' | append: section.settings.icon_border_radius | append: 'px;' }}
+          {% elsif section.settings.icon_type == 'emoji' and section.settings.emoji_icon != blank %}
+            <div style="font-size: {{ section.settings.icon_size }}px; line-height: 1;">
+              {{ section.settings.emoji_icon }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.eyebrow_text != blank %}
+        <div class="luxury-newsletter__eyebrow" 
+             style="color: {{ section.settings.eyebrow_color }};
+                    font-size: {{ section.settings.eyebrow_size }}px;
+                    font-weight: {{ section.settings.eyebrow_weight }};
+                    letter-spacing: {{ section.settings.eyebrow_spacing }}em;
+                    text-transform: {{ section.settings.eyebrow_transform }};
+                    margin-bottom: {{ section.settings.eyebrow_margin }}px;">
+          {{ section.settings.eyebrow_text | escape }}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <{{ section.settings.heading_tag }} class="luxury-newsletter__heading" 
+             style="color: {{ section.settings.heading_color }};
+                    font-size: {{ section.settings.heading_size }}px;
+                    font-weight: {{ section.settings.heading_weight }};
+                    line-height: {{ section.settings.heading_line_height }};
+                    letter-spacing: {{ section.settings.heading_spacing }}em;
+                    text-transform: {{ section.settings.heading_transform }};
+                    margin-bottom: {{ section.settings.heading_margin }}px;">
+          {{ section.settings.heading | escape }}
+        </{{ section.settings.heading_tag }}>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <div class="luxury-newsletter__description" 
+             style="color: {{ section.settings.description_color }};
+                    font-size: {{ section.settings.description_size }}px;
+                    font-weight: {{ section.settings.description_weight }};
+                    line-height: {{ section.settings.description_line_height }};
+                    margin-bottom: {{ section.settings.description_margin }}px;
+                    max-width: {{ section.settings.description_max_width }}px;
+                    margin-left: {{ section.settings.content_alignment == 'center' ? 'auto' : '0' }};
+                    margin-right: {{ section.settings.content_alignment == 'center' ? 'auto' : '0' }};">
+          {{ section.settings.description | escape }}
+        </div>
+      {% endif %}
+      
+      <form class="luxury-newsletter__form" 
+            action="{{ routes.cart_url }}" 
+            method="post" 
+            enctype="multipart/form-data"
+            style="display: flex;
+                   flex-direction: {{ section.settings.form_direction }};
+                   align-items: {{ section.settings.form_alignment }};
+                   justify-content: {{ section.settings.content_alignment == 'center' ? 'center' : section.settings.content_alignment == 'right' ? 'flex-end' : 'flex-start' }};
+                   gap: {{ section.settings.form_gap }}px;
+                   max-width: {{ section.settings.form_max_width }}px;
+                   margin: 0 {{ section.settings.content_alignment == 'center' ? 'auto' : '0' }};">
+        
+        <div class="luxury-newsletter__input-wrapper" 
+             style="position: relative;
+                    flex: {{ section.settings.form_direction == 'row' ? '1' : 'none' }};
+                    width: {{ section.settings.form_direction == 'column' ? '100%' : 'auto' }};">
+          <input type="email" 
+                 name="contact[email]" 
+                 id="newsletter-email-{{ section.id }}"
+                 placeholder="{{ section.settings.input_placeholder | default: 'Enter your email address' }}"
+                 required
+                 style="width: 100%;
+                        padding: {{ section.settings.input_padding_y }}px {{ section.settings.input_padding_x }}px;
+                        border: {{ section.settings.input_border_width }}px solid {{ section.settings.input_border_color }};
+                        border-radius: {{ section.settings.input_border_radius }}px;
+                        background: {{ section.settings.input_bg_color }};
+                        color: {{ section.settings.input_text_color }};
+                        font-size: {{ section.settings.input_font_size }}px;
+                        font-weight: {{ section.settings.input_font_weight }};
+                        outline: none;
+                        transition: all {{ section.settings.input_transition_duration }}ms ease;">
+          
+          {% if section.settings.show_input_icon %}
+            <div class="luxury-newsletter__input-icon" 
+                 style="position: absolute;
+                        {{ section.settings.input_icon_position }}: {{ section.settings.input_icon_offset }}px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: {{ section.settings.input_icon_color }};
+                        font-size: {{ section.settings.input_icon_size }}px;
+                        pointer-events: none;">
+              {% if section.settings.input_icon_svg != blank %}
+                {{ section.settings.input_icon_svg }}
+              {% else %}
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+        
+        <button type="submit" 
+                class="luxury-newsletter__button"
+                style="background: {{ section.settings.button_bg_type == 'solid' ? section.settings.button_bg_color : 'linear-gradient(' | append: section.settings.button_bg_direction | append: ', ' | append: section.settings.button_bg_start | append: ' 0%, ' | append: section.settings.button_bg_end | append: ' 100%)' }};
+                       color: {{ section.settings.button_text_color }};
+                       border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+                       border-radius: {{ section.settings.button_border_radius }}px;
+                       padding: {{ section.settings.button_padding_y }}px {{ section.settings.button_padding_x }}px;
+                       font-size: {{ section.settings.button_font_size }}px;
+                       font-weight: {{ section.settings.button_font_weight }};
+                       letter-spacing: {{ section.settings.button_letter_spacing }}em;
+                       text-transform: {{ section.settings.button_text_transform }};
+                       cursor: pointer;
+                       transition: all {{ section.settings.button_transition_duration }}ms ease;
+                       {{ section.settings.form_direction == 'column' ? 'width: 100%;' : 'white-space: nowrap;' }}">
+          {{ section.settings.button_text | default: 'Subscribe' }}
+        </button>
+        
+        <input type="hidden" name="contact[tags]" value="newsletter">
+      </form>
+      
+      {% if section.settings.show_privacy_notice and section.settings.privacy_text != blank %}
+        <div class="luxury-newsletter__privacy" 
+             style="color: {{ section.settings.privacy_color }};
+                    font-size: {{ section.settings.privacy_size }}px;
+                    font-weight: {{ section.settings.privacy_weight }};
+                    line-height: {{ section.settings.privacy_line_height }};
+                    margin-top: {{ section.settings.privacy_margin_top }}px;
+                    max-width: {{ section.settings.privacy_max_width }}px;
+                    margin-left: {{ section.settings.content_alignment == 'center' ? 'auto' : '0' }};
+                    margin-right: {{ section.settings.content_alignment == 'center' ? 'auto' : '0' }};">
+          {{ section.settings.privacy_text | escape }}
+        </div>
+      {% endif %}
+      
+      {% if section.blocks.size > 0 %}
+        <div class="luxury-newsletter__benefits" 
+             style="margin-top: {{ section.settings.benefits_margin_top }}px;
+                    display: flex;
+                    flex-direction: {{ section.settings.benefits_direction }};
+                    align-items: {{ section.settings.benefits_alignment }};
+                    justify-content: {{ section.settings.content_alignment == 'center' ? 'center' : section.settings.content_alignment == 'right' ? 'flex-end' : 'flex-start' }};
+                    gap: {{ section.settings.benefits_gap }}px;
+                    flex-wrap: wrap;">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'benefit' %}
+                <div class="luxury-newsletter__benefit" {{ block.shopify_attributes }}
+                     style="display: flex;
+                            align-items: center;
+                            gap: {{ block.settings.benefit_icon_gap }}px;
+                            color: {{ block.settings.benefit_text_color }};
+                            font-size: {{ block.settings.benefit_font_size }}px;
+                            font-weight: {{ block.settings.benefit_font_weight }};">
+                  
+                  {% if block.settings.benefit_icon_type != 'none' %}
+                    <div style="color: {{ block.settings.benefit_icon_color }}; font-size: {{ block.settings.benefit_icon_size }}px; flex-shrink: 0;">
+                      {% if block.settings.benefit_icon_type == 'checkmark' %}
+                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                      {% elsif block.settings.benefit_icon_type == 'star' %}
+                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">
+                          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+                        </svg>
+                      {% elsif block.settings.benefit_icon_type == 'shield' %}
+                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12,22s8-4 8-10V5l-8-3-8,3v7c0,6 8,10 8,10z"></path>
+                        </svg>
+                      {% elsif block.settings.benefit_icon_type == 'gift' %}
+                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="20,12 20,22 4,22 4,12"></polyline>
+                          <rect x="2" y="7" width="20" height="5"></rect>
+                          <line x1="12" y1="22" x2="12" y2="7"></line>
+                          <path d="M12,7H7.5a2.5,2.5 0,0,1 0-5C11,2 12,7 12,7z"></path>
+                          <path d="M12,7h4.5a2.5,2.5 0,0,0 0-5C13,2 12,7 12,7z"></path>
+                        </svg>
+                      {% elsif block.settings.benefit_icon_type == 'custom' and block.settings.custom_icon_svg != blank %}
+                        {{ block.settings.custom_icon_svg }}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  
+                  <span>{{ block.settings.benefit_text | escape }}</span>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% if section.settings.show_decorative_elements %}
+    <div class="luxury-newsletter__decorative-elements">
+      <div class="luxury-newsletter__decorative luxury-newsletter__decorative--1" 
+           style="position: absolute;
+                  top: {{ section.settings.decorative_1_top }}%;
+                  left: {{ section.settings.decorative_1_left }}%;
+                  width: {{ section.settings.decorative_1_size }}px;
+                  height: {{ section.settings.decorative_1_size }}px;
+                  background: {{ section.settings.decorative_1_color }};
+                  border-radius: {{ section.settings.decorative_1_type == 'circle' ? '50%' : section.settings.decorative_1_border_radius | append: 'px' }};
+                  opacity: {{ section.settings.decorative_1_opacity }};
+                  transform: rotate({{ section.settings.decorative_1_rotation }}deg);
+                  z-index: 1;"></div>
+      
+      <div class="luxury-newsletter__decorative luxury-newsletter__decorative--2" 
+           style="position: absolute;
+                  bottom: {{ section.settings.decorative_2_bottom }}%;
+                  right: {{ section.settings.decorative_2_right }}%;
+                  width: {{ section.settings.decorative_2_size }}px;
+                  height: {{ section.settings.decorative_2_size }}px;
+                  background: {{ section.settings.decorative_2_color }};
+                  border-radius: {{ section.settings.decorative_2_type == 'circle' ? '50%' : section.settings.decorative_2_border_radius | append: 'px' }};
+                  opacity: {{ section.settings.decorative_2_opacity }};
+                  transform: rotate({{ section.settings.decorative_2_rotation }}deg);
+                  z-index: 1;"></div>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .luxury-newsletter__container {
+    margin: 0 auto;
+  }
+  
+  .luxury-newsletter__background {
+    position: absolute;
+    inset: 0;
+  }
+  
+  .luxury-newsletter__bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .luxury-newsletter__overlay {
+    position: absolute;
+    inset: 0;
+  }
+  
+  .luxury-newsletter__input-wrapper input:focus {
+    border-color: {{ section.settings.input_focus_border_color }};
+    box-shadow: {{ section.settings.input_focus_shadow }};
+  }
+  
+  .luxury-newsletter__button:hover {
+    transform: {{ section.settings.button_hover_transform }};
+    box-shadow: {{ section.settings.button_hover_shadow }};
+  }
+  
+  @media (max-width: 768px) {
+    .luxury-newsletter__form {
+      flex-direction: column !important;
+    }
+    
+    .luxury-newsletter__input-wrapper {
+      width: 100% !important;
+      flex: none !important;
+    }
+    
+    .luxury-newsletter__button {
+      width: 100% !important;
+    }
+    
+    .luxury-newsletter__benefits {
+      flex-direction: column !important;
+    }
+    
+    .luxury-newsletter__decorative-elements {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Luxury Newsletter",
+  "tag": "section",
+  "class": "section-luxury-newsletter",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Section vertical padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_x",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section horizontal padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Container max width",
+      "default": 800
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "bg_type",
+      "label": "Background type",
+      "options": [
+        { "value": "solid", "label": "Solid color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_solid",
+      "label": "Background color (solid)",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_start",
+      "label": "Background gradient start",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_end",
+      "label": "Background gradient end",
+      "default": "#374151"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "options": [
+        { "value": "135deg", "label": "Diagonal (135°)" },
+        { "value": "180deg", "label": "Top to bottom" },
+        { "value": "90deg", "label": "Left to right" }
+      ],
+      "default": "135deg"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "select",
+      "id": "overlay_type",
+      "label": "Image overlay type",
+      "options": [
+        { "value": "solid", "label": "Solid color" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay color (solid)",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_start",
+      "label": "Image overlay gradient start",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_end",
+      "label": "Image overlay gradient end",
+      "default": "transparent"
+    },
+    {
+      "type": "select",
+      "id": "overlay_direction",
+      "label": "Image overlay gradient direction",
+      "options": [
+        { "value": "to top", "label": "Bottom to top" },
+        { "value": "to bottom", "label": "Top to bottom" },
+        { "value": "to right", "label": "Left to right" },
+        { "value": "to left", "label": "Right to left" }
+      ],
+      "default": "to top"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Image overlay opacity",
+      "default": 0.7
+    },
+    {
+      "type": "header",
+      "content": "Content Container"
+    },
+    {
+      "type": "select",
+      "id": "content_bg_type",
+      "label": "Content background type",
+      "options": [
+        { "value": "solid", "label": "Solid color" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_color",
+      "label": "Content background (solid)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_start",
+      "label": "Content gradient start",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_end",
+      "label": "Content gradient end",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "select",
+      "id": "content_bg_direction",
+      "label": "Content gradient direction",
+      "options": [
+        { "value": "135deg", "label": "Diagonal (135°)" },
+        { "value": "180deg", "label": "Top to bottom" },
+        { "value": "90deg", "label": "Left to right" }
+      ],
+      "default": "135deg"
+    },
+    {
+      "type": "color",
+      "id": "content_border_color",
+      "label": "Content border color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "content_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Content border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "content_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Content border radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "min": 32,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "content_shadow",
+      "label": "Content shadow",
+      "default": "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_blur",
+      "label": "Content backdrop blur",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "label": "Icon type",
+      "options": [
+        { "value": "none", "label": "No Icon" },
+        { "value": "svg", "label": "SVG Icon" },
+        { "value": "image", "label": "Image" },
+        { "value": "emoji", "label": "Emoji" }
+      ],
+      "default": "emoji"
+    },
+    {
+      "type": "textarea",
+      "id": "svg_code",
+      "label": "SVG Code",
+      "info": "Paste your SVG code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image",
+      "label": "Icon image"
+    },
+    {
+      "type": "text",
+      "id": "emoji_icon",
+      "label": "Emoji icon",
+      "default": "✉️"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 32,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_margin",
+      "min": 16,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon bottom margin",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "Exclusive Updates"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_weight",
+      "min": 400,
+      "max": 600,
+      "step": 100,
+      "label": "Eyebrow font weight",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_spacing",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.01,
+      "unit": "em",
+      "label": "Eyebrow letter spacing",
+      "default": 0.1
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_transform",
+      "label": "Eyebrow text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_margin",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Eyebrow bottom margin",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join Our Exclusive Circle"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "DIV" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading font size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Heading font weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 1,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "Heading line height",
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": -0.1,
+      "max": 0.1,
+      "step": 0.01,
+      "unit": "em",
+      "label": "Heading letter spacing",
+      "default": -0.02
+    },
+    {
+      "type": "select",
+      "id": "heading_transform",
+      "label": "Heading text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading bottom margin",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Be the first to discover our latest collections, exclusive offers, and insider access to luxury fashion."
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Description font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_weight",
+      "min": 300,
+      "max": 500,
+      "step": 100,
+      "label": "Description font weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "min": 1.4,
+      "max": 2,
+      "step": 0.1,
+      "label": "Description line height",
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "description_margin",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Description bottom margin",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "min": 400,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "label": "Description max width",
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "select",
+      "id": "form_direction",
+      "label": "Form direction",
+      "options": [
+        { "value": "row", "label": "Horizontal" },
+        { "value": "column", "label": "Vertical" }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "form_alignment",
+      "label": "Form alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top/Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom/Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "form_gap",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Form gap",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "form_max_width",
+      "min": 300,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "label": "Form max width",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Input Field"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Input background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border_color",
+      "label": "Input focus border color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "input_focus_shadow",
+      "label": "Input focus shadow",
+      "default": "0 0 0 3px rgba(0,0,0,0.1)"
+    },
+    {
+      "type": "range",
+      "id": "input_border_width",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Input border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Input border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "input_padding_x",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Input horizontal padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_padding_y",
+      "min": 10,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Input vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "input_font_size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Input font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_font_weight",
+      "min": 300,
+      "max": 500,
+      "step": 100,
+      "label": "Input font weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "input_transition_duration",
+      "min": 200,
+      "max": 500,
+      "step": 50,
+      "unit": "ms",
+      "label": "Input transition duration",
+      "default": 300
+    },
+    {
+      "type": "checkbox",
+      "id": "show_input_icon",
+      "label": "Show input icon",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "input_icon_svg",
+      "label": "Input icon SVG",
+      "info": "Leave blank to use default email icon"
+    },
+    {
+      "type": "select",
+      "id": "input_icon_position",
+      "label": "Input icon position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "input_icon_offset",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Input icon offset",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "input_icon_color",
+      "label": "Input icon color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "range",
+      "id": "input_icon_size",
+      "min": 16,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Input icon size",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "select",
+      "id": "button_bg_type",
+      "label": "Button background type",
+      "options": [
+        { "value": "solid", "label": "Solid color" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background (solid)",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_start",
+      "label": "Button gradient start",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_end",
+      "label": "Button gradient end",
+      "default": "#374151"
+    },
+    {
+      "type": "select",
+      "id": "button_bg_direction",
+      "label": "Button gradient direction",
+      "options": [
+        { "value": "135deg", "label": "Diagonal (135°)" },
+        { "value": "180deg", "label": "Top to bottom" },
+        { "value": "90deg", "label": "Left to right" }
+      ],
+      "default": "135deg"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border width",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_padding_x",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button horizontal padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y",
+      "min": 10,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Button vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Button font weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "min": 0,
+      "max": 0.2,
+      "step": 0.01,
+      "unit": "em",
+      "label": "Button letter spacing",
+      "default": 0.025
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "Button text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "button_transition_duration",
+      "min": 200,
+      "max": 500,
+      "step": 50,
+      "unit": "ms",
+      "label": "Button transition duration",
+      "default": 300
+    },
+    {
+      "type": "text",
+      "id": "button_hover_transform",
+      "label": "Button hover transform",
+      "default": "translateY(-2px)"
+    },
+    {
+      "type": "text",
+      "id": "button_hover_shadow",
+      "label": "Button hover shadow",
+      "default": "0 10px 25px rgba(0,0,0,0.15)"
+    },
+    {
+      "type": "header",
+      "content": "Privacy Notice"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_privacy_notice",
+      "label": "Show privacy notice",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "privacy_text",
+      "label": "Privacy text",
+      "default": "We respect your privacy. Unsubscribe at any time."
+    },
+    {
+      "type": "color",
+      "id": "privacy_color",
+      "label": "Privacy text color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "range",
+      "id": "privacy_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Privacy text size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "privacy_weight",
+      "min": 300,
+      "max": 500,
+      "step": 100,
+      "label": "Privacy text weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "privacy_line_height",
+      "min": 1.3,
+      "max": 1.8,
+      "step": 0.1,
+      "label": "Privacy text line height",
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "privacy_margin_top",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Privacy text top margin",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "privacy_max_width",
+      "min": 300,
+      "max": 500,
+      "step": 25,
+      "unit": "px",
+      "label": "Privacy text max width",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Benefits"
+    },
+    {
+      "type": "range",
+      "id": "benefits_margin_top",
+      "min": 16,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Benefits top margin",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "benefits_direction",
+      "label": "Benefits direction",
+      "options": [
+        { "value": "row", "label": "Horizontal" },
+        { "value": "column", "label": "Vertical" }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "benefits_alignment",
+      "label": "Benefits alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top/Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom/Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "benefits_gap",
+      "min": 12,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Benefits gap",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Decorative Elements"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decorative_elements",
+      "label": "Show decorative elements",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "decorative_1_type",
+      "label": "Decorative element 1 type",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "color",
+      "id": "decorative_1_color",
+      "label": "Decorative element 1 color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_size",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Decorative element 1 size",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_top",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "label": "Decorative element 1 top position",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_left",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "label": "Decorative element 1 left position",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_opacity",
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.1,
+      "label": "Decorative element 1 opacity",
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_rotation",
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "unit": "deg",
+      "label": "Decorative element 1 rotation",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "decorative_1_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Decorative element 1 border radius",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "decorative_2_type",
+      "label": "Decorative element 2 type",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "color",
+      "id": "decorative_2_color",
+      "label": "Decorative element 2 color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_size",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Decorative element 2 size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_bottom",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "label": "Decorative element 2 bottom position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_right",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "label": "Decorative element 2 right position",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_opacity",
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.1,
+      "label": "Decorative element 2 opacity",
+      "default": 0.4
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_rotation",
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "unit": "deg",
+      "label": "Decorative element 2 rotation",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "decorative_2_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Decorative element 2 border radius",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "benefit_text",
+          "label": "Benefit text",
+          "default": "Exclusive early access"
+        },
+        {
+          "type": "select",
+          "id": "benefit_icon_type",
+          "label": "Benefit icon type",
+          "options": [
+            { "value": "none", "label": "No Icon" },
+            { "value": "checkmark", "label": "Checkmark" },
+            { "value": "star", "label": "Star" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "custom", "label": "Custom SVG" }
+          ],
+          "default": "checkmark"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_icon_svg",
+          "label": "Custom icon SVG",
+          "info": "Only used when 'Custom SVG' is selected"
+        },
+        {
+          "type": "color",
+          "id": "benefit_icon_color",
+          "label": "Benefit icon color",
+          "default": "#22c55e"
+        },
+        {
+          "type": "range",
+          "id": "benefit_icon_size",
+          "min": 12,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "label": "Benefit icon size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "benefit_icon_gap",
+          "min": 4,
+          "max": 12,
+          "step": 2,
+          "unit": "px",
+          "label": "Benefit icon gap",
+          "default": 8
+        },
+        {
+          "type": "color",
+          "id": "benefit_text_color",
+          "label": "Benefit text color",
+          "default": "#6b7280"
+        },
+        {
+          "type": "range",
+          "id": "benefit_font_size",
+          "min": 10,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "label": "Benefit font size",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "benefit_font_weight",
+          "min": 300,
+          "max": 600,
+          "step": 100,
+          "label": "Benefit font weight",
+          "default": 400
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Newsletter",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_text": "Exclusive early access",
+            "benefit_icon_type": "star"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_text": "Private sales & events",
+            "benefit_icon_type": "gift"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_text": "Style insider tips",
+            "benefit_icon_type": "shield"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

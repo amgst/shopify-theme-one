@@ -1,0 +1,447 @@
+{% comment %}
+Split Screen Hero Section
+{% endcomment %}
+
+<section class="hero-split">
+  <div class="hero-split__container">
+    <div class="hero-split__content">
+      <div class="hero-split__text-content">
+        {% if section.settings.badge_text != blank %}
+          <div class="hero-split__badge" style="background-color: {{ section.settings.accent_color }}20; color: {{ section.settings.accent_color }};">
+            {{ section.settings.badge_text | escape }}
+          </div>
+        {% endif %}
+        
+        {% if section.settings.heading != blank %}
+          <h1 class="hero-split__heading" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.heading | newline_to_br }}
+          </h1>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <p class="hero-split__description" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.description | escape }}
+          </p>
+        {% endif %}
+        
+        <div class="hero-split__button-group">
+          {% if section.settings.button_text != blank %}
+            <a href="{{ section.settings.button_link | default: '#' }}" 
+               class="hero-split__button"
+               style="background-color: {{ section.settings.button_bg }}; color: {{ section.settings.button_text_color }};">
+              {{ section.settings.button_text | escape }}
+            </a>
+          {% endif %}
+          
+          {% if section.settings.price_text != blank or section.settings.shipping_text != blank %}
+            <div class="hero-split__info">
+              {% if section.settings.price_text != blank %}
+                <span>{{ section.settings.price_text | escape }}</span>
+              {% endif %}
+              {% if section.settings.price_text != blank and section.settings.shipping_text != blank %}
+                <span>•</span>
+              {% endif %}
+              {% if section.settings.shipping_text != blank %}
+                <span>{{ section.settings.shipping_text | escape }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+        
+        {% if section.blocks.size > 0 %}
+          <div class="hero-split__stats">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'stat' %}
+                  <div class="hero-split__stat" {{ block.shopify_attributes }}>
+                    <div class="hero-split__stat-number" style="color: {{ section.settings.text_color }};">
+                      {{ block.settings.number | escape }}
+                    </div>
+                    <div class="hero-split__stat-label" style="color: {{ section.settings.text_color }};">
+                      {{ block.settings.label | escape }}
+                    </div>
+                  </div>
+                  {% unless forloop.last %}
+                    <div class="hero-split__stat-divider" style="background-color: {{ section.settings.text_color }};"></div>
+                  {% endunless %}
+              {% endcase %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      
+      <div class="hero-split__image-content">
+        {% if section.settings.image != blank %}
+          <div class="hero-split__image-wrapper">
+            {{ section.settings.image | image_url: width: 1200 | image_tag: 
+               loading: 'lazy',
+               class: 'hero-split__image',
+               alt: section.settings.image.alt | default: section.settings.heading }}
+            <div class="hero-split__image-overlay"></div>
+          </div>
+        {% else %}
+          <div class="hero-split__image-placeholder">
+            <div class="hero-split__placeholder-content">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21,15 16,10 5,21"/>
+              </svg>
+              <p>Add an image</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-split {
+    min-height: {{ section.settings.section_height }}vh;
+    display: flex;
+    align-items: center;
+    background-color: {{ section.settings.bg_color }};
+  }
+  
+  .hero-split__container {
+    width: 100%;
+    max-width: 88rem;
+    margin: 0 auto;
+  }
+  
+  .hero-split__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .hero-split__text-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    order: 2;
+  }
+  
+  .hero-split__text-wrapper {
+    max-width: 28rem;
+  }
+  
+  .hero-split__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-split__heading {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  
+  .hero-split__description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+  
+  .hero-split__button-group {
+    margin-bottom: 2rem;
+  }
+  
+  .hero-split__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-split__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  
+  .hero-split__info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.875rem;
+    opacity: 0.8;
+    justify-content: center;
+  }
+  
+  .hero-split__stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    justify-content: center;
+  }
+  
+  .hero-split__stat {
+    text-align: center;
+  }
+  
+  .hero-split__stat-number {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  
+  .hero-split__stat-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+  }
+  
+  .hero-split__stat-divider {
+    width: 1px;
+    height: 3rem;
+    opacity: 0.3;
+  }
+  
+  .hero-split__image-content {
+    position: relative;
+    order: 1;
+  }
+  
+  .hero-split__image-wrapper {
+    position: relative;
+    height: 50vh;
+    min-height: 400px;
+  }
+  
+  .hero-split__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hero-split__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
+  }
+  
+  .hero-split__image-placeholder {
+    height: 50vh;
+    min-height: 400px;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .hero-split__placeholder-content {
+    text-align: center;
+    color: #9ca3af;
+  }
+  
+  .hero-split__placeholder-content svg {
+    margin: 0 auto 1rem;
+  }
+  
+  @media (min-width: 1024px) {
+    .hero-split__content {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .hero-split__text-content {
+      padding: 4rem 3rem;
+      order: 1;
+    }
+    
+    .hero-split__image-content {
+      order: 2;
+    }
+    
+    .hero-split__image-wrapper,
+    .hero-split__image-placeholder {
+      height: 100vh;
+      min-height: 600px;
+    }
+    
+    .hero-split__button {
+      width: auto;
+      margin-bottom: 0;
+    }
+    
+    .hero-split__info {
+      justify-content: flex-start;
+    }
+    
+    .hero-split__stats {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Split Screen",
+  "tag": "section", 
+  "class": "section-hero-split",
+  "settings": [
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 60,
+      "max": 120,
+      "step": 10,
+      "unit": "vh",
+      "label": "Section height",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "New Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Modern Living\nRedefined"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Experience the perfect blend of comfort and style with our carefully selected home essentials. Transform your space into a sanctuary of modern elegance."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Explore Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "price_text",
+      "label": "Price text",
+      "default": "Starting from $29"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping text", 
+      "default": "Free shipping on orders over $100"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color", 
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "500+"
+        },
+        {
+          "type": "text", 
+          "id": "label",
+          "label": "Label",
+          "default": "Happy Customers"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Split Screen",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "number": "500+",
+            "label": "Happy Customers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "number": "4.9",
+            "label": "Rating"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "number": "24/7",
+            "label": "Support"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

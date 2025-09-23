@@ -1,0 +1,609 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web/src/regular/style.css">
+
+<style>
+  .shopdev .brand-story-gradient {
+    background: linear-gradient(
+      135deg,
+      {{section.settings.gradient_color_1}} 0%,
+      {{section.settings.gradient_color_2}} 100%
+    );
+  }
+
+  .shopdev .feature-icon {
+    transition: all 0.3s ease;
+  }
+
+  .shopdev .feature-block:hover .feature-icon {
+    transform: translateY(-2px);
+  }
+
+  .shopdev .cta-button {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shopdev .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .shopdev .decorative-shape {
+    position: absolute;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .shopdev .image-overlay {
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+  }
+
+  @keyframes shopdev-fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .shopdev .animate-fade-in {
+    animation: shopdev-fadeInUp 0.8s ease-out forwards;
+  }
+
+  .shopdev .testimonial-quote {
+    position: relative;
+  }
+
+  .shopdev .testimonial-quote::before {
+    content: '"';
+    font-size: 60px;
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    opacity: 0.3;
+    font-family: serif;
+  }
+</style>
+
+<div class="w-full relative overflow-hidden">
+  <!-- Background -->
+  <div
+    class="absolute inset-0 {% if section.settings.background_type == 'gradient' %}brand-story-gradient{% endif %}"
+    {% if section.settings.background_type == 'solid' %}
+      style="background-color: {{ section.settings.background_color }}"
+    {% endif %}
+  ></div>
+
+  <!-- Decorative shapes -->
+  {% if section.settings.show_decorative_shapes %}
+    <div class="decorative-shape w-32 h-32 bg-white rounded-full top-10 right-10"></div>
+    <div class="decorative-shape w-20 h-20 bg-white rounded-full bottom-20 left-10"></div>
+  {% endif %}
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    {% if section.settings.layout == 'content-only' %}
+      <!-- Content Only Layout -->
+      <div class="max-w-4xl mx-auto text-center animate-fade-in">
+        {% if section.settings.eyebrow_text != blank %}
+          <p
+            class="text-sm uppercase tracking-wider mb-4"
+            style="color: {{ section.settings.text_color }}; opacity: 0.8;"
+          >
+            {{ section.settings.eyebrow_text }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="text-4xl lg:text-6xl font-light mb-6" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <h3 class="text-xl lg:text-2xl mb-8" style="color: {{ section.settings.text_color }}; opacity: 0.9;">
+            {{ section.settings.subheading }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="prose prose-lg mx-auto mb-12" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+
+    {% else %}
+      <!-- Image + Content Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Image Section -->
+        <div class="{% if section.settings.layout == 'image-right' %}lg:order-2{% endif %} relative">
+          <div class="relative">
+            {%- if section.settings.main_image != blank -%}
+              <div class="relative overflow-hidden rounded-lg {% if section.settings.image_shadow %}shadow-2xl{% endif %}">
+                {{
+                  section.settings.main_image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'w-full h-auto object-cover',
+                    sizes: '(max-width: 768px) 100vw, 50vw'
+                }}
+                {% if section.settings.image_overlay %}
+                  <div class="absolute inset-0 image-overlay"></div>
+                {% endif %}
+              </div>
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-96 bg-gray-200 rounded-lg' }}
+            {%- endif -%}
+
+            <!-- Secondary decorative image -->
+            {% if section.settings.secondary_image != blank %}
+              <div class="absolute -bottom-6 -right-6 w-32 h-32 lg:w-40 lg:h-40 rounded-lg overflow-hidden shadow-lg">
+                {{
+                  section.settings.secondary_image
+                  | image_url: width: 200
+                  | image_tag: loading: 'lazy', class: 'w-full h-full object-cover'
+                }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="{% if section.settings.layout == 'image-right' %}lg:order-1{% endif %} animate-fade-in">
+          {% if section.settings.eyebrow_text != blank %}
+            <p
+              class="text-sm uppercase tracking-wider mb-4"
+              style="color: {{ section.settings.text_color }}; opacity: 0.8;"
+            >
+              {{ section.settings.eyebrow_text }}
+            </p>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h2 class="text-3xl lg:text-5xl font-light mb-6" style="color: {{ section.settings.text_color }};">
+              {{ section.settings.heading }}
+            </h2>
+          {% endif %}
+
+          {% if section.settings.subheading != blank %}
+            <h3 class="text-lg lg:text-xl mb-6" style="color: {{ section.settings.text_color }}; opacity: 0.9;">
+              {{ section.settings.subheading }}
+            </h3>
+          {% endif %}
+
+          {% if section.settings.description != blank %}
+            <div class="prose prose-lg mb-8" style="color: {{ section.settings.text_color }};">
+              {{ section.settings.description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Feature Blocks -->
+    {% if section.blocks.size > 0 %}
+      <div class="mt-16 lg:mt-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ section.blocks.size | at_most: 4 }} gap-8">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'feature' %}
+                <div class="feature-block text-center" {{ block.shopify_attributes }}>
+                  <div class="feature-icon mb-4 flex justify-center">
+                    {% if block.settings.icon_type == 'phosphor' and block.settings.phosphor_icon != blank %}
+                      <i
+                        class="ph ph-{{ block.settings.phosphor_icon }} text-4xl"
+                        style="color: {{ section.settings.text_color }};"
+                      ></i>
+                    {% elsif block.settings.icon_type == 'number' and block.settings.number != blank %}
+                      <span class="text-4xl font-light" style="color: {{ section.settings.text_color }};">
+                        {{- block.settings.number -}}
+                      </span>
+                    {% elsif block.settings.icon_type == 'image' and block.settings.icon_image != blank %}
+                      {{
+                        block.settings.icon_image
+                        | image_url: width: 60
+                        | image_tag: class: 'w-12 h-12 object-contain'
+                      }}
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.title != blank %}
+                    <h4 class="text-lg font-medium mb-2" style="color: {{ section.settings.text_color }};">
+                      {{ block.settings.title }}
+                    </h4>
+                  {% endif %}
+
+                  {% if block.settings.description != blank %}
+                    <p class="text-sm" style="color: {{ section.settings.text_color }}; opacity: 0.8;">
+                      {{ block.settings.description }}
+                    </p>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Testimonial Quote -->
+    {% if section.settings.testimonial_quote != blank %}
+      <div class="mt-16 lg:mt-20 max-w-3xl mx-auto text-center">
+        <blockquote
+          class="testimonial-quote text-xl lg:text-2xl font-light italic mb-6"
+          style="color: {{ section.settings.text_color }};"
+        >
+          {{ section.settings.testimonial_quote }}
+        </blockquote>
+
+        {% if section.settings.testimonial_author != blank %}
+          <cite
+            class="text-sm uppercase tracking-wider"
+            style="color: {{ section.settings.text_color }}; opacity: 0.8;"
+          >
+            — {{ section.settings.testimonial_author }}
+          </cite>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Call to Action Buttons -->
+    {% if section.settings.primary_button_text != blank or section.settings.secondary_button_text != blank %}
+      <div class="mt-12 lg:mt-16 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        {% if section.settings.primary_button_text != blank and section.settings.primary_button_link != blank %}
+          <a
+            href="{{ section.settings.primary_button_link }}"
+            class="cta-button inline-block px-8 py-4 rounded-md font-medium text-center min-w-[200px]"
+            style="background-color: {{ section.settings.primary_button_bg }}; color: {{ section.settings.primary_button_text_color }}; border: 2px solid {{ section.settings.primary_button_border }};"
+          >
+            {{ section.settings.primary_button_text }}
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_button_text != blank and section.settings.secondary_button_link != blank %}
+          <a
+            href="{{ section.settings.secondary_button_link }}"
+            class="cta-button inline-block px-8 py-4 rounded-md font-medium text-center min-w-[200px]"
+            style="background-color: {{ section.settings.secondary_button_bg }}; color: {{ section.settings.secondary_button_text_color }}; border: 2px solid {{ section.settings.secondary_button_border }};"
+          >
+            {{ section.settings.secondary_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Luxury Brand Story",
+  "class": "shopdev",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image-left",
+          "label": "Image Left"
+        },
+        {
+          "value": "image-right",
+          "label": "Image Right"
+        },
+        {
+          "value": "content-only",
+          "label": "Content Only"
+        }
+      ],
+      "default": "image-left"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "secondary_image",
+      "label": "Secondary Decorative Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_overlay",
+      "label": "Enable image overlay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "image_shadow",
+      "label": "Enable image shadow",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Testimonial"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_quote",
+      "label": "Testimonial Quote"
+    },
+    {
+      "type": "text",
+      "id": "testimonial_author",
+      "label": "Testimonial Author"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_bg",
+      "label": "Primary Button Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text_color",
+      "label": "Primary Button Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_border",
+      "label": "Primary Button Border",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_bg",
+      "label": "Secondary Button Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text_color",
+      "label": "Secondary Button Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border",
+      "label": "Secondary Button Border",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background Type",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F8F6F3"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient Color 1",
+      "default": "#F8F6F3"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient Color 2",
+      "default": "#E8E2DB"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decorative_shapes",
+      "label": "Show decorative shapes",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Block",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon Type",
+          "options": [
+            {
+              "value": "phosphor",
+              "label": "Phosphor Icon"
+            },
+            {
+              "value": "number",
+              "label": "Number"
+            },
+            {
+              "value": "image",
+              "label": "Custom Image"
+            }
+          ],
+          "default": "phosphor"
+        },
+        {
+          "type": "text",
+          "id": "phosphor_icon",
+          "label": "Phosphor Icon Name",
+          "info": "Enter icon name (e.g., 'heart', 'star', 'diamond')"
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Brand Story",
+      "settings": {
+        "layout": "image-left",
+        "main_image": "shopify://shop_images/designer-at-work.jpg",
+        "secondary_image": "shopify://shop_images/mixture-of-tools-and-leather-goods.jpg",
+        "eyebrow_text": "HERITAGE & CRAFTSMANSHIP",
+        "heading": "Timeless Elegance, Modern Vision",
+        "subheading": "Where tradition meets innovation in luxury fashion",
+        "description": "<p>For over three decades, our atelier has been dedicated to creating exceptional pieces that transcend fleeting trends. Each garment is meticulously crafted by master artisans who have perfected their skills through generations of expertise.</p><p>We believe that true luxury lies not just in the finest materials, but in the passion, precision, and artistry that goes into every stitch. Our commitment to sustainable practices ensures that beauty and responsibility go hand in hand.</p>",
+        "testimonial_quote": "The attention to detail and quality of craftsmanship is simply unparalleled. Each piece tells a story of dedication and artistry.",
+        "testimonial_author": "Isabella Chen, Fashion Editor",
+        "primary_button_text": "Explore Collection",
+        "primary_button_link": "/collections/all",
+        "secondary_button_text": "Our Story",
+        "secondary_button_link": "/pages/about",
+        "background_type": "gradient",
+        "background_color": "#F8F6F3",
+        "gradient_color_1": "#F8F6F3",
+        "gradient_color_2": "#E8E2DB",
+        "text_color": "#2C2C2C",
+        "image_shadow": true,
+        "show_decorative_shapes": true
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon_type": "phosphor",
+            "phosphor_icon": "crown-simple",
+            "title": "Premium Materials",
+            "description": "Sourced from the finest mills and suppliers worldwide"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon_type": "phosphor",
+            "phosphor_icon": "hand-heart",
+            "title": "Handcrafted Excellence",
+            "description": "Each piece is carefully crafted by skilled artisans"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon_type": "phosphor",
+            "phosphor_icon": "leaf",
+            "title": "Sustainable Luxury",
+            "description": "Committed to ethical and environmentally conscious practices"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon_type": "phosphor",
+            "phosphor_icon": "infinity",
+            "title": "Timeless Design",
+            "description": "Creating pieces that transcend seasons and trends"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
